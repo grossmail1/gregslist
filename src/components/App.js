@@ -67,18 +67,29 @@ const gregsList = {
     checked: false,
   }
 }
+const localState = localStorage.getItem('localState')
+const initialState = localState ? JSON.parse(localState) : {}
 
 const App = () => {
-    const [name, setName] = useState('Greg')
+    const [name, setName] = useState(initialState.name ? initialState.name : 'Greg')
     const [todoText, setTodoText] = useState('')
-    const [todos, setTodos] = useState(gregsList)
+    const [todos, setTodos] = useState(initialState.todos ? initialState.todos : gregsList)
 
    const onNameChange = (e) => {
-      setName(e.target.value)
+     const name = e.target.value
+      setName(name)
+      saveState({
+        name,
+        todos
+      })
     }
 
     const onTodoTextChange = (e) => {
       setTodoText(e.target.value)
+    }
+
+    const saveState = state => {
+      localStorage.setItem('localState', JSON.stringify(state))
     }
 
     const onKeyDownHandler = event => {
@@ -87,25 +98,38 @@ const App = () => {
           value: todoText,
           checked: false,
         })
+        
       }
     }
 
     const addTodo = todo => {
       setTodoText('')
-      setTodos({
+      const newTodos = {
         ...todos,
         [uuidv4()]: todo
+      }
+      setTodos(newTodos)
+      saveState({
+        name, 
+        todos: newTodos,
       })
     }
 
     const todoChecked = id => {
       const todo = todos[id]
-      setTodos({
+
+      const newTodos = {
         ...todos,
         [id]: {
           ...todo,
           checked: !todo.checked,
         }
+      }
+
+      setTodos(newTodos)
+      saveState({
+        name, 
+        todos: newTodos,
       })
     }
     
@@ -113,6 +137,10 @@ const App = () => {
     const deleteTodo = id => {
       const {[id]: removed, ...newTodos} = todos
       setTodos(newTodos)
+      saveState({
+        name,
+        todos: newTodos
+      })
     }
 
     const todoKeys = Object.keys(todos)
