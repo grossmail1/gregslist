@@ -11,10 +11,6 @@ const BodyWrapper = styled.div`
   text-align: center;
 `
 
-const H1 = styled.h1`
-
-`
-
 const NameInput = styled.input`
   border: none;
   border-bottom: 2px solid #fff;
@@ -41,16 +37,41 @@ const TodoInput = styled.input`
   margin: 0 auto;
   font-size: 1.5rem;
   padding: 10px;
+  margin-bottom: 20px;
 
   ::placeholder { 
     color: #ededed;
   }
 `
 
+const CompletedSection = styled.div`
+  font-size: 1.5rem;
+  margin-top: 15px;
+`
+
+const gregsList = {
+  1: {
+    value: 'Create a super cool todolist',
+    checked: true,
+  },
+  2: {
+    value: 'Add an item to the checklist',
+    checked: true,
+  },
+  3: {
+    value: 'Mark an item as complete on the checklist',
+    checked: true,
+  },
+  4: {
+    value: 'Delete an item from the checklist',
+    checked: false,
+  }
+}
+
 const App = () => {
     const [name, setName] = useState('Greg')
     const [todoText, setTodoText] = useState('')
-    const [todos, setTodos] = useState({})
+    const [todos, setTodos] = useState(gregsList)
 
    const onNameChange = (e) => {
       setName(e.target.value)
@@ -65,7 +86,6 @@ const App = () => {
         addTodo({
           value: todoText,
           checked: false,
-          id: uuidv4()
         })
       }
     }
@@ -74,28 +94,55 @@ const App = () => {
       setTodoText('')
       setTodos({
         ...todos,
-        [todo.id]: todo
+        [uuidv4()]: todo
       })
     }
 
+    const todoChecked = id => {
+      const todo = todos[id]
+      setTodos({
+        ...todos,
+        [id]: {
+          ...todo,
+          checked: !todo.checked,
+        }
+      })
+    }
+    
+
+    const deleteTodo = id => {
+      const {[id]: removed, ...newTodos} = todos
+      setTodos(newTodos)
+    }
+
+    const todoKeys = Object.keys(todos)
+    const completedTodos = todoKeys.map(id => todos[id].checked).filter(todo => todo)
+    console.log(completedTodos)
     const renderTodos = () => (
-      Object.keys(todos).map(id => <TodoItem key={id} todo={todos[id]}/>)
+      todoKeys.map(id => <TodoItem key={id} idx={id} todo={todos[id]} onItemChecked={todoChecked} onDeleteClick={deleteTodo}/>)
     )
 
     return (
-
-
       <BodyWrapper>
         <header>
-          <H1>
+          <h1>
             <NameInput type="text" value={name} onChange={onNameChange} />'s List
-          </H1>
+          </h1>
         </header>
         <TodoSection>
-          <TodoInput type="text" value={todoText} onChange={onTodoTextChange} onKeyDown={onKeyDownHandler} placeholder="Add items to list here"/> 
+          <TodoInput
+           type="text"
+           value={todoText}
+           onChange={onTodoTextChange}
+           onKeyDown={onKeyDownHandler}
+           placeholder="Add items to list here"
+           /> 
           <div>
             {renderTodos()}
           </div>
+          <CompletedSection>
+            <b>{completedTodos.length} - {todoKeys.length}</b> items completed
+          </CompletedSection>
         </TodoSection>
       </BodyWrapper>
     );
