@@ -7,7 +7,7 @@ import {TrashAlt as Trash} from 'styled-icons/fa-solid/TrashAlt'
 
 
 const Value = styled.span`
-    font-size: 2rem;
+    font-size: 1.15rem;
     width: 100%;
     text-align: left;
     padding: 0 5px;
@@ -48,15 +48,15 @@ const TodoItem = ({todo: {value, checked}, idx, onItemChecked, onDeleteClick}) =
         <Row>
             <Button onClick={onCheckedClick}>
                 {checked ?
-                     <Checked size="30" title="Item Checked - click to uncheck" /> :
-                     <Unchecked size="30" title="Item Checked - click to uncheck"/>
+                     <Checked size="20" title="Item Checked - click to uncheck" /> :
+                     <Unchecked size="20" title="Item Checked - click to uncheck"/>
                 }
             </Button>
             <Value checked={checked}>
                 {value}
             </Value>
             <Button onClick={onTrashClick}>
-                <Trash size="30" title="Click to delete item" />
+                <Trash size="20" title="Click to delete item" />
             </Button>
         </Row>
     )
