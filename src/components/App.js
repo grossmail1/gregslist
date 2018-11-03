@@ -13,6 +13,7 @@ const BodyWrapper = styled.div`
 
 const NameInput = styled.input`
   border: none;
+  border-radius: 0;
   border-bottom: 2px solid #fff;
   background-color: transparent;
   font-size: inherit;
@@ -30,6 +31,7 @@ const TodoSection = styled.div`
 
 const TodoInput = styled.input`
   border: none;
+  border-radius: 0;
   border-bottom: 2px solid #fff;
   background-color: #3B9175;
   color: #fff;
