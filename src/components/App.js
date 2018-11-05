@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components'
 import uuidv4 from 'uuid/v4'
 import TodoItem from './TodoItem'
@@ -77,21 +77,20 @@ const App = () => {
     const [todoText, setTodoText] = useState('')
     const [todos, setTodos] = useState(initialState.todos ? initialState.todos : gregsList)
 
+    useEffect(() => {
+      localStorage.setItem('localState', JSON.stringify({
+        name,
+        todos
+      }))
+    })
+
    const onNameChange = (e) => {
      const name = e.target.value
       setName(name)
-      saveState({
-        name,
-        todos
-      })
     }
 
     const onTodoTextChange = (e) => {
       setTodoText(e.target.value)
-    }
-
-    const saveState = state => {
-      localStorage.setItem('localState', JSON.stringify(state))
     }
 
     const onKeyDownHandler = event => {
@@ -111,10 +110,6 @@ const App = () => {
         [uuidv4()]: todo
       }
       setTodos(newTodos)
-      saveState({
-        name, 
-        todos: newTodos,
-      })
     }
 
     const todoChecked = id => {
@@ -129,20 +124,12 @@ const App = () => {
       }
 
       setTodos(newTodos)
-      saveState({
-        name, 
-        todos: newTodos,
-      })
     }
     
 
     const deleteTodo = id => {
       const {[id]: removed, ...newTodos} = todos
       setTodos(newTodos)
-      saveState({
-        name,
-        todos: newTodos
-      })
     }
 
     const todoKeys = Object.keys(todos)
